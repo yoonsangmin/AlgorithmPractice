@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include <queue>
 #include <unordered_map>
 #include <deque>
 #include "math/Vector2.h"
 
-// A* ±æÃ£±â ±â´ÉÀ» Ã³¸®ÇÏ´Â Å¬·¡½º.
+// A* ê¸¸ì°¾ê¸° ê¸°ëŠ¥ì„ ì²˜ë¦¬í•˜ëŠ” í´ë˜ìŠ¤.
 class NavigationSystem
 {
 private:
@@ -46,24 +46,27 @@ public:
 	NavigationSystem() = default;
 	~NavigationSystem() = default;
 
-	// °æ·Î °Ë»ö ÇÔ¼ö.
+	// ê²½ë¡œ ê²€ìƒ‰ í•¨ìˆ˜.
 	void FindPath(const Vector2& start, const Vector2& destination, const std::vector<std::vector<bool>>& map, std::deque<Vector2>* outPath);
 
 private:
-	// ¸ñÀûÁö¿¡¼­ ¿ªÃßÀûÇØ¼­ °æ·Î »ı¼º.
+	// ëª©ì ì§€ì—ì„œ ì—­ì¶”ì í•´ì„œ ê²½ë¡œ ìƒì„±.
 	void ConstructPath(Node goalNode, const Vector2& start, std::deque<Vector2>* outPath);
 
-	// hCost °è»ê ÇÔ¼ö.
+    // ê¸¸ì„ ëª» ì°¾ì•˜ì„ ê²½ìš° ëŒ€ì±„ ëª©ì ì§€ ì„¤ì •.
+    void SetAlternativeDestination(const Vector2& start, const Vector2& destination, std::deque<Vector2>* outPath);
+
+	// hCost ê³„ì‚° í•¨ìˆ˜.
 	float CalculateHeuristic(const Vector2& position, const Vector2 destination);
 
-	// Å½»öÇÏ·Á´Â À§Ä¡°¡ À¯È¿ÇÑ À§Ä¡ÀÎÁö È®ÀÎ.
+	// íƒìƒ‰í•˜ë ¤ëŠ” ìœ„ì¹˜ê°€ ìœ íš¨í•œ ìœ„ì¹˜ì¸ì§€ í™•ì¸.
 	bool IsValidPosition(const Vector2& position, const std::vector<std::vector<bool>>& map);
 
 private:
 
-	// ¿­¸° ¸®½ºÆ®.
+	// ì—´ë¦° ë¦¬ìŠ¤íŠ¸.
 	std::priority_queue<Node, std::vector<Node>> openList;
 
-	// ´İÈù ¸®½ºÆ®.
+	// ë‹«íŒ ë¦¬ìŠ¤íŠ¸.
 	std::unordered_map<Vector2, Node> closedList;
 };

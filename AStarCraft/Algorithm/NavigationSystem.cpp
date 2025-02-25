@@ -1,25 +1,26 @@
-#include "NavigationSystem.h"
+ï»¿#include "NavigationSystem.h"
 
 void NavigationSystem::FindPath(const Vector2& start, const Vector2& destination, const std::vector<std::vector<bool>>& map, std::deque<Vector2>* outPath)
 {
+    outPath->clear();
 	openList.push(Node(start, start));
 
 	while (!openList.empty())
 	{
-		// °¡Àå ÀÛÀº fCost¸¦ °¡Áø ³ëµå¸¦ °¡Á®¿Â´Ù.
+		// ê°€ì¥ ì‘ì€ fCostë¥¼ ê°€ì§„ ë…¸ë“œë¥¼ ê°€ì ¸ì˜¨ë‹¤.
 		Node currentNode = openList.top();
 		openList.pop();
 
-		// ClosedList¿¡ µé¾îÀÖ´Â °æ¿ì ¹«½ÃÇÑ´Ù.
+		// ClosedListì— ë“¤ì–´ìˆëŠ” ê²½ìš° ë¬´ì‹œí•œë‹¤.
 		if (closedList.find(currentNode.position) != closedList.end())
 		{
 			continue;
 		}
 
-		// ÇöÀç ³ëµå¸¦ ClosedList¿¡ Ãß°¡ÇÑ´Ù.
+		// í˜„ì¬ ë…¸ë“œë¥¼ ClosedListì— ì¶”ê°€í•œë‹¤.
 		closedList[currentNode.position] = currentNode;
 
-		// ¸ñÀûÁö¿¡ µµÂøÇßÀ¸¸é °æ·Î¸¦ »ı¼ºÇÏ°í Á¾·áÇÑ´Ù.
+		// ëª©ì ì§€ì— ë„ì°©í–ˆìœ¼ë©´ ê²½ë¡œë¥¼ ìƒì„±í•˜ê³  ì¢…ë£Œí•œë‹¤.
 		if (currentNode.position == destination)
 		{
 			ConstructPath(currentNode, start, outPath);
@@ -30,30 +31,36 @@ void NavigationSystem::FindPath(const Vector2& start, const Vector2& destination
 		{
 			Vector2 nextPosition = currentNode.position + directions[ix];
 
-			// ´ÙÀ½ ³ëµå°¡ À¯È¿ÇÑÁö È®ÀÎ.
+			// ë‹¤ìŒ ë…¸ë“œê°€ ìœ íš¨í•œì§€ í™•ì¸.
 			if (!IsValidPosition(nextPosition, map))
 			{
 				continue;
 			}
 
-			// ÀÌ¹Ì ClosedList¿¡ ÀÖ´Â °æ¿ì ¹«½Ã.
+			// ì´ë¯¸ ClosedListì— ìˆëŠ” ê²½ìš° ë¬´ì‹œ.
 			if (closedList.find(nextPosition) != closedList.end())
 			{
 				continue;
 			}
 
-			// ´ÙÀ½ ³ëµå °ª ¼³Á¤.
+			// ë‹¤ìŒ ë…¸ë“œ ê°’ ì„¤ì •.
 			Node newNode(nextPosition, currentNode.position);
 			newNode.gCost = currentNode.gCost + 1;
 			newNode.hCost = CalculateHeuristic(nextPosition, destination);
 			newNode.fCost = newNode.gCost + newNode.hCost;
 
-			// ¿ÀÇÂ ¸®½ºÆ®¿¡ Ãß°¡.
+			// ì˜¤í”ˆ ë¦¬ìŠ¤íŠ¸ì— ì¶”ê°€.
 			openList.push(newNode);
 		}
 	}
 
-	// ¸®½ºÆ® ºñ¿ì±â.
+    // ê¸¸ì„ ëª» ì°¾ì•˜ì„ ê²½ìš°.
+    if (outPath->empty())
+    {
+        SetAlternativeDestination(start, destination, outPath);
+    }
+
+	// ë¦¬ìŠ¤íŠ¸ ë¹„ìš°ê¸°.
 	while (!openList.empty()) 
 	{
 		openList.pop();
@@ -63,7 +70,6 @@ void NavigationSystem::FindPath(const Vector2& start, const Vector2& destination
 
 void NavigationSystem::ConstructPath(Node goalNode, const Vector2& start, std::deque<Vector2>* outPath)
 {
-	outPath->clear();
 	Vector2 currentPosition = goalNode.position;
 
 	while (currentPosition != start)
@@ -73,9 +79,36 @@ void NavigationSystem::ConstructPath(Node goalNode, const Vector2& start, std::d
 	}
 }
 
+void NavigationSystem::SetAlternativeDestination(const Vector2& start, const Vector2& destination, std::deque<Vector2>* outPath)
+{
+    // closedListì— ìˆëŠ” ë…¸ë“œ ì¤‘ ëª©ì ì§€ì™€ ê°€ì¥ ê°€ê¹Œìš´ ë…¸ë“œë¥¼ ì°¾ëŠ”ë‹¤.
+    float minGCost = FLT_MAX;
+    float minHCost = FLT_MAX;
+    Vector2 alternativeDestination;
+    for (auto& node : closedList)
+    {
+        if (node.second.position == start)
+        {
+            continue;
+        }
+
+        float hCost = node.second.hCost;
+        float gCost = node.second.gCost;
+        if (hCost < minHCost || hCost == minHCost && gCost < minGCost)
+        {
+            minHCost = hCost;
+            minGCost = gCost;
+            alternativeDestination = node.first;
+        }
+    }
+
+    // ëª©ì ì§€ë¡œ ì„¤ì •.
+    ConstructPath(closedList[alternativeDestination], start, outPath);
+}
+
 float NavigationSystem::CalculateHeuristic(const Vector2& position, const Vector2 destination)
 {
-	// Á÷¼± °Å¸® °è»ê.
+	// ì§ì„  ê±°ë¦¬ ê³„ì‚°.
 	return sqrtf(powf((float)destination.x - position.x, 2) + powf((float)destination.y - position.y, 2));
 }
 

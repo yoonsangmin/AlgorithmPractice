@@ -1,4 +1,4 @@
-#include "AStarLevel.h"
+ï»¿#include "AStarLevel.h"
 #include "Actor/Player.h"
 #include "Actor/Wall.h"
 
@@ -11,10 +11,7 @@ AStarLevel::AStarLevel(const char* path)
 	
 void AStarLevel::FindPath(const Vector2& start, const Vector2& destination, std::deque<Vector2>* outPath)
 {
-	if (map[destination.y][destination.x])
-	{
-		navigationSystem.FindPath(start, destination, map, outPath);
-	}
+    navigationSystem.FindPath(start, destination, map, outPath);
 }
 
 void AStarLevel::LoadMap(const char* filePath)
@@ -31,18 +28,18 @@ void AStarLevel::LoadMap(const char* filePath)
 
 	char buffer[256];
 	int line = 0;
-	// ÇÑ ÁÙ¾¿ ÀĞ±â.
+	// í•œ ì¤„ì”© ì½ê¸°.
 	while (fgets(buffer, 256, file) != 0)
 	{
-		// ¹®ÀÚ¿­ ±æÀÌ ±¸ÇÏ±â.
+		// ë¬¸ìì—´ ê¸¸ì´ êµ¬í•˜ê¸°.
 		int length = (int)strlen(buffer);
 
 		std::vector<bool> lineData(length, true);
 
-		// ¹®ÀÚ¿­À» ÇÑ ±ÛÀÚ¾¿ ÀĞ¾î¼­ ¾×ÅÍ »ı¼º.
+		// ë¬¸ìì—´ì„ í•œ ê¸€ìì”© ì½ì–´ì„œ ì•¡í„° ìƒì„±.
 		for (int ix = 0; ix < length; ++ix)
 		{
-			// º® »ı¼º.
+			// ë²½ ìƒì„±.
 			if (buffer[ix] == '1')
 			{
 				AddActor(new Wall(Vector2(ix, line), this));
@@ -51,7 +48,7 @@ void AStarLevel::LoadMap(const char* filePath)
 		}
 
 		map.emplace_back(lineData);
-		// ÁÙ ¼ö Áõ°¡.
+		// ì¤„ ìˆ˜ ì¦ê°€.
 		++line;
 	}
 
