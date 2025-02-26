@@ -51,10 +51,12 @@ public:
             {
                 if (actor->position.x >= boundStart.x && actor->position.x <= boundEnd.x &&
                     actor->position.y >= boundStart.y && actor->position.y <= boundEnd.y)
+                {
                     if (auto castedActor = std::dynamic_pointer_cast<T>(actor))
                     {
                         outActors.emplace_back(castedActor);
                     }
+                }
             }
         }
     }
@@ -80,6 +82,5 @@ protected:
 	std::vector<std::shared_ptr<Actor>> addRequestedActors;
 
     std::vector<std::vector<bool>> naviMap;
-    std::vector<std::vector<bool>> collisonMap;
     NavigationSystem navigationSystem;
 };

@@ -38,8 +38,21 @@ void Player::Update(float deltaTime)
         }
 
         selectedUnits.clear();
+
+        Vector2 currentMousePosition = Engine::Get().MousePosition();
+        int startX = lButtonDownMousePosition.x < currentMousePosition.x ? lButtonDownMousePosition.x : currentMousePosition.x;
+        int endX = lButtonDownMousePosition.x >= currentMousePosition.x ? lButtonDownMousePosition.x : currentMousePosition.x;
+        int startY = lButtonDownMousePosition.y < currentMousePosition.y ? lButtonDownMousePosition.y : currentMousePosition.y;
+        int endY = lButtonDownMousePosition.y >= currentMousePosition.y ? lButtonDownMousePosition.y : currentMousePosition.y;
+
+        startX = max(startX, 0);
+        startY = max(startY, 0);
+
+        endX = min(endX, Engine::Get().ScreenSize().x - 1);
+        endY = min(endY, Engine::Get().ScreenSize().y - 1);
+
         // 유닛 선택.
-        level->FindActors(lButtonDownMousePosition, Engine::Get().MousePosition(), selectedUnits);
+        level->FindActors(Vector2(startX, startY), Vector2(endX, endY), selectedUnits);
 
         for (const std::weak_ptr<Unit> unit : selectedUnits)
         {

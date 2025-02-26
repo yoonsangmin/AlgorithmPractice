@@ -14,7 +14,7 @@ public:
 
 	virtual void Update(float deltaTime) override;
 
-	void RequestPath(Vector2 newPosition);
+	void RequestPath(Vector2 newPosition, bool shouldKeepTargetPosition = false);
 
     virtual bool SetPosition(const Vector2& newPosition) override;
 
@@ -29,6 +29,10 @@ private:
 	void DrawPathMarker(float deltaTime);
 
 private:
+    Vector2 targetPosition;
+    int attempt = 0;
+    int maxAttempt = 5;
+
 	std::deque<Vector2> path;
 	float moveSpeedPerSecond;
 	Timer moveTimer;

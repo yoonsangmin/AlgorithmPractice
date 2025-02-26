@@ -25,6 +25,11 @@ Unit::Unit(const Vector2& position, Level* level, float moveSpeed, float MarkerS
 
 	markerIndex = 0;
     SetSelected(false);
+
+    targetPosition = position;
+
+    attempt = 0;
+    maxAttempt = 5;
 }
 
 void Unit::Update(float deltaTime)
@@ -45,11 +50,17 @@ void Unit::Update(float deltaTime)
 	}
 }
 
-void Unit::RequestPath(Vector2 newPosition)
+void Unit::RequestPath(Vector2 newPosition, bool shouldKeepTargetPosition)
 {
     level->UpdateMap(position, true);
 	level->As<AStarLevel>()->FindPath(position, newPosition, &path);
     level->UpdateMap(position, false);
+
+    if (!shouldKeepTargetPosition)
+    {
+        targetPosition = newPosition;
+        attempt = 0;
+    }
 
 	if (path.size() == 0)
 	{
@@ -84,13 +95,24 @@ void Unit::MoveToNextPath()
                 path.pop_front();
                 moveTimer.Reset();
             }
-            else
+            else if (attempt < maxAttempt)
             {
-                //RequestPath(path.back());
+                ++attempt;
+                RequestPath(targetPosition, true);
                 moveTimer.Reset();
             }
 		}
 	}
+
+    if (moveTimer.IsTimeOut())
+    {
+        if (path.size() == 0 && position != targetPosition && attempt < maxAttempt)
+        {
+            ++attempt;
+            RequestPath(targetPosition, true);
+            moveTimer.Reset();
+        }
+    }
 }
 
 void Unit::DrawPathMarker(float deltaTime)
