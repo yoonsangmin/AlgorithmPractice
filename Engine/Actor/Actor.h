@@ -1,24 +1,24 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Core.h"
 #include "RTTI.h"
 #include "Math/Vector2.h"
 
-// ·¹º§ÀÇ ±âº» ¹°Ã¼.
+// ë ˆë²¨ì˜ ê¸°ë³¸ ë¬¼ì²´.
 class ENGINE_API Actor : public RTTI
 {
-	// RTTI ¼±¾ð.
+	// RTTI ì„ ì–¸.
 	RTTI_DECLARATIONS(Actor, RTTI)
 
-	// Level Å¬·¡½º¸¦ friend·Î ¼±¾ð.
-	// private¿¡ Á¢±ÙÀÌ °¡´ÉÇÏµµ·Ï.
+	// Level í´ëž˜ìŠ¤ë¥¼ friendë¡œ ì„ ì–¸.
+	// privateì— ì ‘ê·¼ì´ ê°€ëŠ¥í•˜ë„ë¡.
 	friend class Level;
 
 public:
 	Actor(class Level* level, int priority = 0);
 	virtual ~Actor();
 
-	// ·çÇÁ Ã³¸® ÇÔ¼ö.
+	// ë£¨í”„ ì²˜ë¦¬ í•¨ìˆ˜.
 	virtual void Update(float delatTime);
 	virtual void Draw();
 
@@ -28,34 +28,39 @@ public:
 
 	inline void SetPriority(int newPirority) { priority = newPirority; }
 	inline bool IsAcive() const { return isActive && !isExpired; }
-	inline void SetActive(bool active) { isActive = active; }
-	inline void Destroy() { isExpired = true; }
-	inline bool IsVisible() { return isVisible; }
-	inline void SetVisibility(bool visible) { this->isVisible = visible; }
+    inline void SetActive(bool active) { isActive = active; }
 
-	// ¿¬»êÀÚ ¿À¹ö·Îµù.
+	inline void Destroy() { isExpired = true; }
+    inline bool IsVisible() const { return isVisible; }
+    inline void SetVisibility(bool visible) { isVisible = visible; }
+    inline bool IsStatic() const { return isStatic; }
+
+	// ì—°ì‚°ìž ì˜¤ë²„ë¡œë”©.
 	bool operator>(const Actor& other) const
 	{
 		return priority > other.priority;
 	}
 
 protected:
-	// ¼ÒÀ¯ÇÑ ·¹º§.
+	// ì†Œìœ í•œ ë ˆë²¨.
 	class Level* level = nullptr;
 
-	// ¾×ÅÍÀÇ À§Ä¡.
+	// ì•¡í„°ì˜ ìœ„ì¹˜.
 	Vector2 position;
 
-	// Update, Draw È£Ãâ ¿ì¼± ¼øÀ§.
+	// Update, Draw í˜¸ì¶œ ìš°ì„  ìˆœìœ„.
 	int priority;
 
-	// ID(ÇØ½Ã) / ÀÌ¸§ °ª.
-	// È°¼ºÈ­ »óÅÂÀÎÁö¸¦ ³ªÅ¸³»´Â º¯¼ö.
+	// ID(í•´ì‹œ) / ì´ë¦„ ê°’.
+	// í™œì„±í™” ìƒíƒœì¸ì§€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜.
 	bool isActive;
 
-	// ¾×ÅÍÀÇ Á¦°Å ¿äÃ»ÀÌ µÆ´ÂÁö ¿©ºÎ¸¦ ³ªÅ¸³»´Â º¯¼ö.
+	// ì•¡í„°ì˜ ì œê±° ìš”ì²­ì´ ëëŠ”ì§€ ì—¬ë¶€ë¥¼ ë‚˜íƒ€ë‚´ëŠ” ë³€ìˆ˜.
 	bool isExpired;
 
-	// È­¸é¿¡ ±×¸±Áö.
+	// í™”ë©´ì— ê·¸ë¦´ì§€.
 	bool isVisible = true;
+
+    // ì •ì  ì•¡í„°ì¸ì§€.
+    bool isStatic = true;
 };

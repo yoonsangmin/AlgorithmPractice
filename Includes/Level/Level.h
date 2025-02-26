@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <vector>
 #include <set>
@@ -6,26 +6,27 @@
 #include "RTTI.h"
 #include "Container/List.h"
 #include "Actor/Actor.h"
+#include "Algorithm/NavigationSystem.h"
 
 struct ActorComparator
 {
 	bool operator()(const std::shared_ptr<Actor>& lhs, const std::shared_ptr<Actor>& rhs) const
 	{
-		// Actor Å¬·¡½ºÀÇ ºñ±³ ¿¬»êÀÚ¸¦ »ç¿ëÇÏ¿© ºñ±³
+		// Actor í´ë˜ìŠ¤ì˜ ë¹„êµ ì—°ì‚°ìë¥¼ ì‚¬ìš©í•˜ì—¬ ë¹„êµ
 		return *lhs > *rhs;
 	}
 };
 
 class ENGINE_API Level : public RTTI
 {
-	// RTTI Á¤ÀÇ.
+	// RTTI ì •ì˜.
 	RTTI_DECLARATIONS(Level, RTTI)
 
 public:
 	Level();
 	virtual ~Level();
 
-	// ¾×ÅÍ Ãß°¡ ÇÔ¼ö.
+	// ì•¡í„° ì¶”ê°€ í•¨ìˆ˜.
 	template<typename T, typename = std::enable_if_t<std::is_base_of<Actor, T>::value>>
 	std::shared_ptr<T> AddActor(T* newActor)
 	{
@@ -40,17 +41,27 @@ public:
 		return newActor;
 	}
 
-	// »èÁ¦ ¿äÃ»ÀÌ µÈ ¾×ÅÍ¸¦ Á¤¸®ÇÏ´Â ÇÔ¼ö.
+	// ì‚­ì œ ìš”ì²­ì´ ëœ ì•¡í„°ë¥¼ ì •ë¦¬í•˜ëŠ” í•¨ìˆ˜.
 	void ProcessAddedAndDestroyedActor();
 
-	// ·çÇÁ Ã³¸® ÇÔ¼ö.
+	// ë£¨í”„ ì²˜ë¦¬ í•¨ìˆ˜.
 	virtual void Update(float deltaTime);
 	virtual void Draw();
 
+    // ê¸¸ ì°¾ê¸° ìš”ì²­ í•¨ìˆ˜.
+    void FindPath(const Vector2& start, const Vector2& destination, std::deque<Vector2>* outPath);
+
+    void UpdateMap(const Vector2& position, bool canWalk);
+    bool CanWalk(const Vector2& position);
+
 protected:
-	// °ÔÀÓ °ø°£¿¡ ¹èÄ¡µÇ´Â ¹°Ã¼(¾×ÅÍ) ¹è¿­.
+	// ê²Œì„ ê³µê°„ì— ë°°ì¹˜ë˜ëŠ” ë¬¼ì²´(ì•¡í„°) ë°°ì—´.
 	std::multiset<std::shared_ptr<Actor>, ActorComparator> actors;
 
-	// Ãß°¡ ¿äÃ»µÈ ¾×ÅÍ.
+	// ì¶”ê°€ ìš”ì²­ëœ ì•¡í„°.
 	std::vector<std::shared_ptr<Actor>> addRequestedActors;
+
+    std::vector<std::vector<bool>> naviMap;
+    std::vector<std::vector<bool>> collisonMap;
+    NavigationSystem navigationSystem;
 };

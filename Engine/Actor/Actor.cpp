@@ -1,7 +1,8 @@
-#include "PreCompiledHeader.h"
+﻿#include "PreCompiledHeader.h"
 #include "Actor.h"
 
 #include "Core.h"
+#include "Level/Level.h"
 
 Actor::Actor(class Level* level, int priority)
 	: isActive(true), isExpired(false), level(level), priority(priority)

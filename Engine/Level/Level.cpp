@@ -1,5 +1,6 @@
-#include "PreCompiledHeader.h"
+ï»¿#include "PreCompiledHeader.h"
 #include "Level.h"
+#include "Engine/Engine.h"
 
 Level::Level()
 {
@@ -13,7 +14,7 @@ void Level::ProcessAddedAndDestroyedActor()
 {
 	std::multiset<std::shared_ptr<Actor>, ActorComparator> newActors;
 
-	// ¾×ÅÍ ¼øÈ¸ ÈÄ »èÁ¦ ¿äÃ»µÈ ¾×ÅÍ¸¦ Ã³¸®.
+	// ì•¡í„° ìˆœíšŒ í›„ ì‚­ì œ ìš”ì²­ëœ ì•¡í„°ë¥¼ ì²˜ë¦¬.
 	for (const std::shared_ptr<Actor>& actor : actors)
 	{
 		if (!actor->isExpired)
@@ -22,7 +23,7 @@ void Level::ProcessAddedAndDestroyedActor()
 		}
 	}
 
-	// Ãß°¡ ¿äÃ»µÈ ¾×ÅÍ Ã³¸®.
+    // ì¶”ê°€ ìš”ì²­ëœ ì•¡í„° ì²˜ë¦¬.
 	if (addRequestedActors.size() > 0)
 	{
 		for (std::shared_ptr<Actor>& newActor : addRequestedActors)
@@ -39,10 +40,10 @@ void Level::ProcessAddedAndDestroyedActor()
 
 void Level::Update(float deltaTime)
 {
-	// ·¹º§¿¡ Æ÷ÇÔµÈ ¾×ÅÍ¸¦ ¼øÈ¸ÇÏ¸é¼­ Update ÇÔ¼ö È£Ãâ.
+	// ë ˆë²¨ì— í¬í•¨ëœ ì•¡í„°ë¥¼ ìˆœíšŒí•˜ë©´ì„œ Update í•¨ìˆ˜ í˜¸ì¶œ.
 	for (const std::shared_ptr<Actor>& actor : actors)
 	{
-		// ¾×ÅÍ°¡ ºñÈ°¼ºÈ­ »óÅÂÀÌ°Å³ª, »èÁ¦ ¿äÃ»µÈ °æ¿ì °Ç³Ê¶Ù±â.
+		// ì•¡í„°ê°€ ë¹„í™œì„±í™” ìƒíƒœì´ê±°ë‚˜, ì‚­ì œ ìš”ì²­ëœ ê²½ìš° ê±´ë„ˆë›°ê¸°.
 		if (!actor->isActive || actor->isExpired)
 		{
 			continue;
@@ -54,10 +55,10 @@ void Level::Update(float deltaTime)
 
 void Level::Draw()
 {
-	// ·¹º§¿¡ Æ÷ÇÔµÈ ¾×ÅÍ¸¦ ¼øÈ¸ÇÏ¸é¼­ Draw ÇÔ¼ö È£Ãâ.
+	// ë ˆë²¨ì— í¬í•¨ëœ ì•¡í„°ë¥¼ ìˆœíšŒí•˜ë©´ì„œ Draw í•¨ìˆ˜ í˜¸ì¶œ.
 	for (const std::shared_ptr<Actor>& actor : actors)
 	{
-		// ¾×ÅÍ°¡ ºñÈ°¼ºÈ­ »óÅÂÀÌ°Å³ª, »èÁ¦ ¿äÃ»µÈ °æ¿ì °Ç³Ê¶Ù±â.
+		// ì•¡í„°ê°€ ë¹„í™œì„±í™” ìƒíƒœì´ê±°ë‚˜, ì‚­ì œ ìš”ì²­ëœ ê²½ìš° ê±´ë„ˆë›°ê¸°.
 		if (!actor->isActive || actor->isExpired || !actor->isVisible)
 		{
 			continue;
@@ -65,4 +66,19 @@ void Level::Draw()
 
 		actor->Draw();
 	}
+}
+
+void Level::FindPath(const Vector2& start, const Vector2& destination, std::deque<Vector2>* outPath)
+{
+    navigationSystem.FindPath(start, destination, naviMap, outPath);
+}
+
+void Level::UpdateMap(const Vector2& position, bool canWalk)
+{
+    collisonMap[position.y][position.x] = canWalk;
+}
+
+bool Level::CanWalk(const Vector2& position)
+{
+    return collisonMap[position.y][position.x];
 }

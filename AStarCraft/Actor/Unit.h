@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <deque>
 #include <vector>
@@ -16,6 +16,8 @@ public:
 
 	void RequestPath(Vector2 newPosition);
 
+    virtual void SetPosition(const Vector2& newPosition) override;
+
 private:
 	void MoveToNextPath();
 	void DrawPathMarker(float deltaTime);
@@ -31,5 +33,6 @@ private:
 	//std::weak_ptr<class Marker> pathMarker;
 	int maxMarker = 0;
 	std::vector<std::weak_ptr<class Marker>> pathMarkers;
-	std::deque<Vector2>::iterator markerIterator;
+    std::vector<Vector2> markerPositions;
+	int markerIndex;
 };

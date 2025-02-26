@@ -23,7 +23,6 @@
     <ClCompile Include="Actor\Player.cpp" />
     <ClCompile Include="Actor\Unit.cpp" />
     <ClCompile Include="Actor\Wall.cpp" />
-    <ClCompile Include="Algorithm\NavigationSystem.cpp" />
     <ClCompile Include="Level\AStarLevel.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -32,7 +31,6 @@
     <ClInclude Include="Actor\Player.h" />
     <ClInclude Include="Actor\Unit.h" />
     <ClInclude Include="Actor\Wall.h" />
-    <ClInclude Include="Algorithm\NavigationSystem.h" />
     <ClInclude Include="Level\AStarLevel.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

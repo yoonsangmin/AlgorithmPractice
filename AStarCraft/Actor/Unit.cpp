@@ -23,7 +23,7 @@ Unit::Unit(const Vector2& position, Level* level, float moveSpeed, float MarkerS
 		pathMarkers.back().lock()->SetActive(false);
 	}
 
-	markerIterator = path.end();
+	markerIndex = 0;
 }
 
 void Unit::Update(float deltaTime)
@@ -46,8 +46,10 @@ void Unit::Update(float deltaTime)
 
 void Unit::RequestPath(Vector2 newPosition)
 {
+    level->UpdateMap(position, true);
 	level->As<AStarLevel>()->FindPath(position, newPosition, &path);
-	
+    level->UpdateMap(position, false);
+
 	if (path.size() == 0)
 	{
 		return;
@@ -55,9 +57,17 @@ void Unit::RequestPath(Vector2 newPosition)
 
 	markerMoveTimer.Reset();
 	pathMarkers[0].lock()->SetActive(true);
-	markerIterator = path.begin() + 1;
+	markerIndex = 1;
+    markerPositions.assign(path.begin(), path.end());
 
 	markerIntervalTimer.SetTimeOut(true);
+}
+
+void Unit::SetPosition(const Vector2& newPosition)
+{
+    level->UpdateMap(position, true);
+    Super::SetPosition(newPosition);
+    level->UpdateMap(position, false);
 }
 
 void Unit::MoveToNextPath()
@@ -66,9 +76,17 @@ void Unit::MoveToNextPath()
 	{
 		if (moveTimer.IsTimeOut())
 		{
-			SetPosition(path.front());
-			path.pop_front();
-			moveTimer.Reset();
+            if (level->CanWalk(path.front()))
+            {
+                SetPosition(path.front());
+                path.pop_front();
+                moveTimer.Reset();
+            }
+            else
+            {
+                //RequestPath(path.back());
+                moveTimer.Reset();
+            }
 		}
 	}
 }
@@ -94,10 +112,10 @@ void Unit::DrawPathMarker(float deltaTime)
 			if (markerMoveTimer.IsTimeOut())
 			{
 				markerMoveTimer.Reset();
-				if (markerIterator != path.end())
+				if (markerIndex < markerPositions.size())
 				{
-					pathMarkers[0].lock()->SetPosition(*markerIterator);
-					++markerIterator;
+					pathMarkers[0].lock()->SetPosition(markerPositions[markerIndex]);
+					++markerIndex;
 				}
 				
 				for (int ix = maxMarker - 1; ix > 0; --ix)
@@ -109,7 +127,7 @@ void Unit::DrawPathMarker(float deltaTime)
 					}
 				}
 
-				if (markerIterator == path.end() && pathMarkers.front().lock()->Position() == pathMarkers.back().lock()->Position())
+				if (markerIndex == markerPositions.size() && pathMarkers.front().lock()->Position() == pathMarkers.back().lock()->Position())
 				{
 					markerIntervalTimer.Reset();
 					for (int ix = 0; ix < maxMarker; ++ix)

@@ -8,11 +8,6 @@ AStarLevel::AStarLevel(const char* path)
 
 	LoadMap("../Assets/Map.txt");
 }
-	
-void AStarLevel::FindPath(const Vector2& start, const Vector2& destination, std::deque<Vector2>* outPath)
-{
-    navigationSystem.FindPath(start, destination, map, outPath);
-}
 
 void AStarLevel::LoadMap(const char* filePath)
 {
@@ -47,7 +42,8 @@ void AStarLevel::LoadMap(const char* filePath)
 			}
 		}
 
-		map.emplace_back(lineData);
+		naviMap.emplace_back(lineData);
+        collisonMap.emplace_back(lineData);
 		// 줄 수 증가.
 		++line;
 	}
