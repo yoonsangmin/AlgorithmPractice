@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <deque>
 #include <vector>
@@ -28,4 +28,6 @@ private:
 
 	std::vector<std::weak_ptr<Unit>> units;
 	std::vector<std::weak_ptr<Unit>> selectedUnits;
+
+    Vector2 lButtonDownMousePosition;
 };

@@ -21,9 +21,15 @@ void Actor::Draw()
 {
 }
 
-void Actor::SetPosition(const Vector2& newPosition)
+bool Actor::SetPosition(const Vector2& newPosition)
 {
-	position = newPosition;
+    if (isCollisionEnabled && level->CanWalk(newPosition) || !isCollisionEnabled)
+    {
+        position = newPosition;
+        return true;
+    }
+
+    return false;
 }
 
 inline Vector2 Actor::Position() const

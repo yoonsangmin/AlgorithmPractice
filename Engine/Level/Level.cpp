@@ -75,10 +75,20 @@ void Level::FindPath(const Vector2& start, const Vector2& destination, std::dequ
 
 void Level::UpdateMap(const Vector2& position, bool canWalk)
 {
+    if (position.y < 0 || position.y >= collisonMap.size() || position.x < 0 || position.x >= collisonMap[0].size())
+    {
+        return;
+    }
+
     collisonMap[position.y][position.x] = canWalk;
 }
 
 bool Level::CanWalk(const Vector2& position)
 {
-    return collisonMap[position.y][position.x];
+    if (position.y < 0 || position.y >= naviMap.size() || position.x < 0 || position.x >= naviMap[0].size())
+    {
+        return false;
+    }
+
+    return naviMap[position.y][position.x] && collisonMap[position.y][position.x];
 }

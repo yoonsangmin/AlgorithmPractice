@@ -1,4 +1,4 @@
-#include "Marker.h"
+﻿#include "Marker.h"
 
 Marker::Marker(const Vector2& position, const Color color, Level* level)
 	: DrawableActor(level, " ")

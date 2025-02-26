@@ -33,7 +33,4 @@ protected:
 
 	// 색상 값.
 	Color color = Color::White;
-
-	// 충돌 가능한지 여부.
-	bool enableCollision = false;
 };

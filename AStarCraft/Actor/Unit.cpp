@@ -4,9 +4,9 @@
 #include "Level/AStarLevel.h"
 
 Unit::Unit(const Vector2& position, Level* level, float moveSpeed, float MarkerSpeed, float markerInterval, int maxMarker)
-	: DrawableActor(level, "e", false, true)
+	: DrawableActor(level, "M", false, true)
 {
-	color = Color::Green;
+	color = Color::Yellow;
 	this->position = position;
 
 	moveSpeedPerSecond = moveSpeed;
@@ -24,6 +24,7 @@ Unit::Unit(const Vector2& position, Level* level, float moveSpeed, float MarkerS
 	}
 
 	markerIndex = 0;
+    SetSelected(false);
 }
 
 void Unit::Update(float deltaTime)
@@ -63,11 +64,13 @@ void Unit::RequestPath(Vector2 newPosition)
 	markerIntervalTimer.SetTimeOut(true);
 }
 
-void Unit::SetPosition(const Vector2& newPosition)
+bool Unit::SetPosition(const Vector2& newPosition)
 {
     level->UpdateMap(position, true);
-    Super::SetPosition(newPosition);
+    bool result = Super::SetPosition(newPosition);
     level->UpdateMap(position, false);
+    
+    return result;
 }
 
 void Unit::MoveToNextPath()
@@ -76,9 +79,8 @@ void Unit::MoveToNextPath()
 	{
 		if (moveTimer.IsTimeOut())
 		{
-            if (level->CanWalk(path.front()))
+            if (SetPosition(path.front()))
             {
-                SetPosition(path.front());
                 path.pop_front();
                 moveTimer.Reset();
             }

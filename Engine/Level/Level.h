@@ -41,6 +41,24 @@ public:
 		return newActor;
 	}
 
+    template<typename T, typename = std::enable_if_t<std::is_base_of<Actor, T>::value>>
+    void FindActors(const Vector2& boundStart, const Vector2& boundEnd, std::vector<std::weak_ptr<T>>& outActors)
+    {
+        outActors.clear();
+        for (const std::shared_ptr<Actor>& actor : actors)
+        {
+            if (actor->As<T>())
+            {
+                if (actor->position.x >= boundStart.x && actor->position.x <= boundEnd.x &&
+                    actor->position.y >= boundStart.y && actor->position.y <= boundEnd.y)
+                    if (auto castedActor = std::dynamic_pointer_cast<T>(actor))
+                    {
+                        outActors.emplace_back(castedActor);
+                    }
+            }
+        }
+    }
+
 	// 삭제 요청이 된 액터를 정리하는 함수.
 	void ProcessAddedAndDestroyedActor();
 

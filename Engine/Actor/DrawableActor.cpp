@@ -2,10 +2,11 @@
 #include "DrawableActor.h"
 #include "Engine/Engine.h"
 
-DrawableActor::DrawableActor(Level* level, const char* image, bool isStatic, bool enableCollision, int priority)
-	: Actor(level, priority), enableCollision(enableCollision)
+DrawableActor::DrawableActor(Level* level, const char* image, bool isStatic, bool isCollisionEnabled, int priority)
+	: Actor(level, priority)
 {
     this->isStatic = isStatic;
+    this->isCollisionEnabled = isCollisionEnabled;
 
 	// 전달 받은 문자열 복사.
 	auto length = strlen(image) + 1;

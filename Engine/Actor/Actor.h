@@ -23,7 +23,7 @@ public:
 	virtual void Draw();
 
 	// Getter/Setter.
-	virtual void SetPosition(const Vector2& newPosition);
+	virtual bool SetPosition(const Vector2& newPosition);
 	inline Vector2 Position() const;
 
 	inline void SetPriority(int newPirority) { priority = newPirority; }
@@ -63,4 +63,7 @@ protected:
 
     // 정적 액터인지.
     bool isStatic = true;
+
+    // 충돌 가능한지 여부.
+    bool isCollisionEnabled = false;
 };

@@ -16,7 +16,13 @@ public:
 
 	void RequestPath(Vector2 newPosition);
 
-    virtual void SetPosition(const Vector2& newPosition) override;
+    virtual bool SetPosition(const Vector2& newPosition) override;
+
+    inline void SetSelected(bool isSelected) 
+    { 
+        this->isSelected = isSelected;
+        SetColor(isSelected ? Color::BrightGreen : Color::Yellow);
+    }
 
 private:
 	void MoveToNextPath();
@@ -35,4 +41,6 @@ private:
 	std::vector<std::weak_ptr<class Marker>> pathMarkers;
     std::vector<Vector2> markerPositions;
 	int markerIndex;
+
+    bool isSelected = false;
 };

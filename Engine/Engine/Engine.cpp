@@ -1,4 +1,4 @@
-#include "PreCompiledHeader.h"
+ï»¿#include "PreCompiledHeader.h"
 
 #include "Engine.h"
 #include <Windows.h>
@@ -11,7 +11,7 @@
 
 #include "Render/ScreenBuffer.h"
 
-// ÄÜ¼Ö Ã¢ ¸Ş½ÃÁö Äİ¹é ÇÔ¼ö.
+// ì½˜ì†” ì°½ ë©”ì‹œì§€ ì½œë°± í•¨ìˆ˜.
 BOOL WINAPI MessageProcessor(DWORD message)
 {
 	switch (message)
@@ -25,72 +25,72 @@ BOOL WINAPI MessageProcessor(DWORD message)
 	}
 }
 
-// ½ºÅÂÆ½ º¯¼ö ÃÊ±âÈ­.
+// ìŠ¤íƒœí‹± ë³€ìˆ˜ ì´ˆê¸°í™”.
 Engine* Engine::instance = nullptr;
 
 Engine::Engine()
 	: quit(false), mainLevel(nullptr), screenSize(60, 25)
 {
-	// ·£´ı ½Ãµå ¼³Á¤.
+	// ëœë¤ ì‹œë“œ ì„¤ì •.
 	srand((unsigned int)time(nullptr));
 
-	// ½Ì±ÛÅæ °´Ã¼ ¼³Á¤.
+	// ì‹±ê¸€í†¤ ê°ì²´ ì„¤ì •.
 	instance = this;
 
-	// ±âº» Å¸°Ù ÇÁ·¹ÀÓ ¼Óµµ ¼³Á¤.
+	// ê¸°ë³¸ íƒ€ê²Ÿ í”„ë ˆì„ ì†ë„ ì„¤ì •.
 	SetTargetFrameRate(60.0f);
 
-	// È­¸é ¹öÆÛ ÃÊ±âÈ­.
-	// 1. ¹öÆÛ Å©±â ÇÒ´ç.
+	// í™”ë©´ ë²„í¼ ì´ˆê¸°í™”.
+	// 1. ë²„í¼ í¬ê¸° í• ë‹¹.
 	imageBuffer = new CHAR_INFO[(screenSize.x) * screenSize.y];
 
-	// ¹öÆÛ ÃÊ±âÈ­.
+	// ë²„í¼ ì´ˆê¸°í™”.
 	ClearImageBuffer();
 
-	// µÎ °³ÀÇ ¹öÆÛ »ı¼º (¹öÆÛ¸¦ ¹ø°¥¾Æ »ç¿ëÇÏ±â À§ÇØ-´õºí ¹öÆÛ¸µ).
+	// ë‘ ê°œì˜ ë²„í¼ ìƒì„± (ë²„í¼ë¥¼ ë²ˆê°ˆì•„ ì‚¬ìš©í•˜ê¸° ìœ„í•´-ë”ë¸” ë²„í¼ë§).
 	COORD size = { (short)screenSize.x, (short)screenSize.y };
 	//renderTargets[0] = new ScreenBuffer(GetStdHandle(STD_OUTPUT_HANDLE), size);
 	renderTargets[0] = new ScreenBuffer(size);
 	renderTargets[1] = new ScreenBuffer(size);
 
-	// ½º¿Ò ¹öÆÛ.
+	// ìŠ¤ì™‘ ë²„í¼.
 	Present();
 
-	// ÄÜ¼Ö Ã¢ ÀÌº¥Æ® Äİ¹é ÇÔ¼ö µî·Ï.
+	// ì½˜ì†” ì°½ ì´ë²¤íŠ¸ ì½œë°± í•¨ìˆ˜ ë“±ë¡.
 	SetConsoleCtrlHandler(MessageProcessor, true);
 
-	// ¸¶¿ì½º/À©µµ¿ì ÀÌº¥Æ® È°¼ºÈ­.
+	// ë§ˆìš°ìŠ¤/ìœˆë„ìš° ì´ë²¤íŠ¸ í™œì„±í™”.
 	HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
 	int flag = ENABLE_WINDOW_INPUT | ENABLE_MOUSE_INPUT | ENABLE_PROCESSED_INPUT | ENABLE_EXTENDED_FLAGS;
 	SetConsoleMode(inputHandle, flag);
 
-	// std::cin/std::cout ¿¬°á ²÷±â.
+	// std::cin/std::cout ì—°ê²° ëŠê¸°.
 	std::ios::sync_with_stdio(false);
 }
 
 Engine::~Engine()
 {
-	// ¸ŞÀÎ ·¹º§ ¸Ş¸ğ¸® ÇØÁ¦.
+	// ë©”ì¸ ë ˆë²¨ ë©”ëª¨ë¦¬ í•´ì œ.
 	if (mainLevel != nullptr)
 	{
 		delete mainLevel;
 	}
 
-	// Å¬¸®¾î ¹öÆÛ »èÁ¦.
+	// í´ë¦¬ì–´ ë²„í¼ ì‚­ì œ.
 	delete[] imageBuffer;
 
-	// È­¸é ¹öÆÛ »èÁ¦.
+	// í™”ë©´ ë²„í¼ ì‚­ì œ.
 	delete renderTargets[0];
 	delete renderTargets[1];
 }
 
 void Engine::Run()
 {
-	// ½Ã½ºÅÛ ½Ã°è -> °íÇØ»óµµ Ä«¿îÅÍ. (10000000).
+	// ì‹œìŠ¤í…œ ì‹œê³„ -> ê³ í•´ìƒë„ ì¹´ìš´í„°. (10000000).
 	LARGE_INTEGER frequency;
 	QueryPerformanceFrequency(&frequency);
 
-	// ½ÃÀÛ ½Ã°£ ¹× ÀÌÀü ½Ã°£À» À§ÇÑ º¯¼ö.
+	// ì‹œì‘ ì‹œê°„ ë° ì´ì „ ì‹œê°„ì„ ìœ„í•œ ë³€ìˆ˜.
 	LARGE_INTEGER time;
 	QueryPerformanceCounter(&time);
 
@@ -100,36 +100,36 @@ void Engine::Run()
 	// Game-Loop.
 	while (true)
 	{
-		// Á¾·á Á¶°Ç.
+		// ì¢…ë£Œ ì¡°ê±´.
 		if (quit)
 		{
 			break;
 		}
 
-		// ÇöÀç ÇÁ·¹ÀÓ ½Ã°£ ÀúÀå.
+		// í˜„ì¬ í”„ë ˆì„ ì‹œê°„ ì €ì¥.
 		QueryPerformanceCounter(&time);
 		currentTime = time.QuadPart;
 
-		// ÇÁ·¹ÀÓ ½Ã°£ °è»ê.
+		// í”„ë ˆì„ ì‹œê°„ ê³„ì‚°.
 		float deltaTime = static_cast<float>(currentTime - previousTime) /
 			static_cast<float>(frequency.QuadPart);
 
-		// ÇÁ·¹ÀÓ È®ÀÎ.
+		// í”„ë ˆì„ í™•ì¸.
 		if (deltaTime >= targetOneFrameTime)
 		{
-			// ÀÔ·Â Ã³¸® (ÇöÀç Å°/¸¶¿ì½º ÀÔ·Â »óÅÂ È®ÀÎ).
+			// ì…ë ¥ ì²˜ë¦¬ (í˜„ì¬ í‚¤/ë§ˆìš°ìŠ¤ ì…ë ¥ ìƒíƒœ í™•ì¸).
 			ProcessInput();
 
 			Update(deltaTime);
 			Draw();
 
-			// Å° »óÅÂ ÀúÀå.
+			// í‚¤ ìƒíƒœ ì €ì¥.
 			SavePreviouseKeyStates();
 
-			// ÀÌÀü ÇÁ·¹ÀÓ ½Ã°£ ÀúÀå.
+			// ì´ì „ í”„ë ˆì„ ì‹œê°„ ì €ì¥.
 			previousTime = currentTime;
 
-			// ¾×ÅÍ Á¤¸® (Ãß°¡ ¹× »èÁ¦ ¿äÃ»µÈ ¾×ÅÍµé Á¤¸®).
+			// ì•¡í„° ì •ë¦¬ (ì¶”ê°€ ë° ì‚­ì œ ìš”ì²­ëœ ì•¡í„°ë“¤ ì •ë¦¬).
 			if (mainLevel)
 			{
 				AssignAddRequestedActors();
@@ -141,21 +141,21 @@ void Engine::Run()
 
 void Engine::LoadLevel(Level* newLevel)
 {
-	// ±âÁ¸ ·¹º§ÀÌ ÀÖ´Ù¸é »èÁ¦ ÈÄ ±³Ã¼.
+	// ê¸°ì¡´ ë ˆë²¨ì´ ìˆë‹¤ë©´ ì‚­ì œ í›„ êµì²´.
 
-	// ¸ŞÀÎ ·¹º§ ¼³Á¤.
+	// ë©”ì¸ ë ˆë²¨ ì„¤ì •.
 	mainLevel = newLevel;
 }
 
 void Engine::AssignAddRequestedActors()
 {
-	// ¿¹¿Ü Ã³¸®.
+	// ì˜ˆì™¸ ì²˜ë¦¬.
 	if (mainLevel == nullptr)
 	{
 		return;
 	}
 
-	// ¾×ÅÍ Ãß°¡ ¿äÃ».
+	// ì•¡í„° ì¶”ê°€ ìš”ì²­.
 	for (const std::shared_ptr<Actor>& actor : addRequestedActors)
 	{
 		mainLevel->AddActor(actor);
@@ -166,7 +166,7 @@ void Engine::AssignAddRequestedActors()
 
 void Engine::DestroyActor(Actor* targetActor)
 {
-	// ¿¹¿Ü Ã³¸®.
+	// ì˜ˆì™¸ ì²˜ë¦¬.
 	if (mainLevel == nullptr)
 	{
 		return;
@@ -218,13 +218,13 @@ Vector2 Engine::MousePosition() const
 
 void Engine::QuitGame()
 {
-	// Á¾·á ÇÃ·¡±× ¼³Á¤.
+	// ì¢…ë£Œ í”Œë˜ê·¸ ì„¤ì •.
 	quit = true;
 }
 
 Engine& Engine::Get()
 {
-	// ½Ì±ÛÅæ °´Ã¼ ¹İÈ¯.
+	// ì‹±ê¸€í†¤ ê°ì²´ ë°˜í™˜.
 	return *instance;
 }
 
@@ -242,12 +242,12 @@ void Engine::ProcessInput()
 			{
 			case KEY_EVENT:
 			{
-				// Å° ´­¸² »óÅÂ ¾÷µ¥ÀÌÆ®.
+				// í‚¤ ëˆŒë¦¼ ìƒíƒœ ì—…ë°ì´íŠ¸.
 				if (record.Event.KeyEvent.bKeyDown)
 				{
 					keyState[record.Event.KeyEvent.wVirtualKeyCode].isKeyDown = true;
 				}
-				// Å° ´­¸² ÇØÁ¦ »óÅÂ ¾÷µ¥ÀÌÆ®.
+				// í‚¤ ëˆŒë¦¼ í•´ì œ ìƒíƒœ ì—…ë°ì´íŠ¸.
 				else
 				{
 					keyState[record.Event.KeyEvent.wVirtualKeyCode].isKeyDown = false;
@@ -257,17 +257,21 @@ void Engine::ProcessInput()
 
 			case MOUSE_EVENT:
 			{
-				// ¸¶¿ì½º Ä¿¼­ À§Ä¡ ¾÷µ¥ÀÌÆ®.
+				// ë§ˆìš°ìŠ¤ ì»¤ì„œ ìœ„ì¹˜ ì—…ë°ì´íŠ¸.
 				mousePosition.x = record.Event.MouseEvent.dwMousePosition.X;
 				mousePosition.y = record.Event.MouseEvent.dwMousePosition.Y;
 
-				// ¸¶¿ì½º ¿ŞÂÊ ¹öÆ° Å¬¸¯ »óÅÂ ¾÷µ¥ÀÌÆ®.
+				// ë§ˆìš°ìŠ¤ ì™¼ìª½ ë²„íŠ¼ í´ë¦­ ìƒíƒœ ì—…ë°ì´íŠ¸.
 				keyState[VK_LBUTTON].isKeyDown
 					= (record.Event.MouseEvent.dwButtonState & FROM_LEFT_1ST_BUTTON_PRESSED) != 0;
 
-				// ¸¶¿ì½º ¿À¸¥ÂÊ ¹öÆ° Å¬¸¯ »óÅÂ ¾÷µ¥ÀÌÆ®.
+				// ë§ˆìš°ìŠ¤ ì˜¤ë¥¸ìª½ ë²„íŠ¼ í´ë¦­ ìƒíƒœ ì—…ë°ì´íŠ¸.
 				keyState[VK_RBUTTON].isKeyDown
 					= (record.Event.MouseEvent.dwButtonState & RIGHTMOST_BUTTON_PRESSED) != 0;
+
+                // ë§ˆìš°ìŠ¤ ê°€ìš´ë° ë²„íŠ¼ í´ë¦­ ìƒíƒœ ì—…ë°ì´íŠ¸.
+                keyState[VK_MBUTTON].isKeyDown
+                    = (record.Event.MouseEvent.dwButtonState & FROM_LEFT_2ND_BUTTON_PRESSED) != 0;
 			}
 			break;
 
@@ -284,7 +288,7 @@ void Engine::ProcessInput()
 		}
 	}
 
-	//// Å° ÀÔ·Â Å×½ºÆ®.
+	//// í‚¤ ì…ë ¥ í…ŒìŠ¤íŠ¸.
 	//for (int ix = 0; ix < 255; ++ix)
 	//{
 	//	keyState[ix].isKeyDown = (GetAsyncKeyState(ix) & 0x8000) ? true : false;
@@ -293,7 +297,7 @@ void Engine::ProcessInput()
 
 void Engine::Update(float deltaTime)
 {
-	// ·¹º§ ¾÷µ¥ÀÌÆ®.
+	// ë ˆë²¨ ì—…ë°ì´íŠ¸.
 	if (mainLevel != nullptr)
 	{
 		mainLevel->Update(deltaTime);
@@ -308,7 +312,7 @@ void Engine::Clear()
 
 void Engine::Draw()
 {
-	// È­¸é Áö¿ì±â.
+	// í™”ë©´ ì§€ìš°ê¸°.
 	Clear();
 
 	//char buffer[256];
@@ -319,16 +323,16 @@ void Engine::Draw()
 	//snprintf(buffer, 256, "keyState: %s", state);
 	//Draw(Vector2(15, 2), buffer);
 
-	// ·¹º§ ±×¸®±â.
+	// ë ˆë²¨ ê·¸ë¦¬ê¸°.
 	if (mainLevel != nullptr)
 	{
 		mainLevel->Draw();
 	}
 
-	// ¹é¹öÆÛ¿¡ µ¥ÀÌÅÍ ¾²±â.
+	// ë°±ë²„í¼ì— ë°ì´í„° ì“°ê¸°.
 	GetRenderer()->Draw(imageBuffer);
 
-	// ÇÁ·ĞÆ®<->¹é ¹öÆÛ ±³È¯.
+	// í”„ë¡ íŠ¸<->ë°± ë²„í¼ êµí™˜.
 	Present();
 }
 
@@ -349,10 +353,10 @@ void Engine::SavePreviouseKeyStates()
 
 void Engine::ClearImageBuffer()
 {
-	// ¹öÆÛ µ¤¾î¾²±â.
+	// ë²„í¼ ë®ì–´ì“°ê¸°.
 	for (int y = 0; y < screenSize.y; ++y)
 	{
-		// ¹öÆÛ µ¤¾î¾²±â.
+		// ë²„í¼ ë®ì–´ì“°ê¸°.
 		for (int x = 0; x < screenSize.x; ++x)
 		{
 			auto& buffer = imageBuffer[y * screenSize.x + x];

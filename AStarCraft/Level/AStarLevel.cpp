@@ -43,7 +43,7 @@ void AStarLevel::LoadMap(const char* filePath)
 		}
 
 		naviMap.emplace_back(lineData);
-        collisonMap.emplace_back(lineData);
+        collisonMap.emplace_back(std::vector<bool>(length, true));
 		// 줄 수 증가.
 		++line;
 	}
