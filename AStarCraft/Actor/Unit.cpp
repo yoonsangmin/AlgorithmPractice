@@ -136,19 +136,20 @@ void Unit::DrawPathMarker(float deltaTime)
 			if (markerMoveTimer.IsTimeOut())
 			{
 				markerMoveTimer.Reset();
+
+                for (int ix = maxMarker - 1; ix > 0; --ix)
+                {
+                    if (pathMarkers[ix - 1].lock()->IsAcive())
+                    {
+                        pathMarkers[ix].lock()->SetPosition(pathMarkers[ix - 1].lock()->Position());
+                        pathMarkers[ix].lock()->SetActive(true);
+                    }
+                }
+
 				if (markerIndex < markerPositions.size())
 				{
 					pathMarkers[0].lock()->SetPosition(markerPositions[markerIndex]);
 					++markerIndex;
-				}
-				
-				for (int ix = maxMarker - 1; ix > 0; --ix)
-				{
-					if (pathMarkers[ix - 1].lock()->IsAcive())
-					{
-						pathMarkers[ix].lock()->SetPosition(pathMarkers[ix - 1].lock()->Position());
-						pathMarkers[ix].lock()->SetActive(true);
-					}
 				}
 
 				if (markerIndex == markerPositions.size() && pathMarkers.front().lock()->Position() == pathMarkers.back().lock()->Position())
