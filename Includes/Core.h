@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <iostream>
 #include <Windows.h>
@@ -7,37 +7,37 @@
 #include <stdlib.h>
 #include <crtdbg.h>
 
-// »ö»ó ¿­°ÅÇü.
+// ìƒ‰ìƒ ì—´ê±°í˜•.
 enum class Color : unsigned short
 {
-	Black = 0,
+    Black = 0,
 
-	Red = FOREGROUND_RED,
-	Green = FOREGROUND_GREEN,
-	Blue = FOREGROUND_BLUE,
-	Magenta = Red + Blue,
-	Cyan = Green + Blue,
-	Yellow = Red + Green,
-	White = Red + Green + Blue,
+    Red = FOREGROUND_RED,
+    Green = FOREGROUND_GREEN,
+    Blue = FOREGROUND_BLUE,
+    Magenta = Red + Blue,
+    Cyan = Green + Blue,
+    Yellow = Red + Green,
+    White = Red + Green + Blue,
 
-	BrightRed = FOREGROUND_INTENSITY | Red,
-	BrightGreen = FOREGROUND_INTENSITY | Green,
-	BrightBlue = FOREGROUND_INTENSITY | Blue,
-	BrightMagenta = BrightRed + BrightBlue,
-	BrightCyan = BrightGreen + BrightBlue,
-	BrightYellow = BrightRed + BrightGreen,
-	BrightWhite = BrightRed + BrightGreen + BrightBlue,
+    BrightRed = FOREGROUND_INTENSITY | Red,
+    BrightGreen = FOREGROUND_INTENSITY | Green,
+    BrightBlue = FOREGROUND_INTENSITY | Blue,
+    BrightMagenta = BrightRed + Blue,
+    BrightCyan = BrightGreen + Blue,
+    BrightYellow = BrightRed + Green,
+    BrightWhite = BrightRed + Green + Blue,
 
-	BackgroundRed = BACKGROUND_RED,
-	BackgroundGreen = BACKGROUND_GREEN,
-	BackgroundBlue = BACKGROUND_BLUE,
-	BackgroundMagenta = BackgroundRed + BackgroundBlue,
-	BackgroundCyan = BackgroundGreen + BackgroundBlue,
-	BackgroundYellow = BackgroundRed + BackgroundGreen,
-	BackgroundWhite = BackgroundRed + BackgroundGreen + BackgroundBlue
+    BackgroundRed = BACKGROUND_RED,
+    BackgroundGreen = BACKGROUND_GREEN,
+    BackgroundBlue = BACKGROUND_BLUE,
+    BackgroundMagenta = BackgroundRed + BackgroundBlue,
+    BackgroundCyan = BackgroundGreen + BackgroundBlue,
+    BackgroundYellow = BackgroundRed + BackgroundGreen,
+    BackgroundWhite = BackgroundRed + BackgroundGreen + BackgroundBlue
 };
 
-// Ä¿¼­ÀÇ Á¾·ù¸¦ ¼³Á¤ÇÒ ¶§ »ç¿ëÇÒ ¿­°ÅÇü.
+// ì»¤ì„œì˜ ì¢…ë¥˜ë¥¼ ì„¤ì •í•  ë•Œ ì‚¬ìš©í•  ì—´ê±°í˜•.
 enum class CursorType
 {
 	NoCursor,
@@ -45,7 +45,7 @@ enum class CursorType
 	NormalCursor
 };
 
-// ÄÜ¼Ö »ö»ó ¼³Á¤ ÇÔ¼ö.
+// ì½˜ì†” ìƒ‰ìƒ ì„¤ì • í•¨ìˆ˜.
 //inline void SetColor(Color color)
 //{
 //	SetConsoleTextAttribute(
@@ -54,7 +54,7 @@ enum class CursorType
 //	);
 //}
 
-// ¸Ş¸ğ¸® »èÁ¦ ÇÔ¼ö.
+// ë©”ëª¨ë¦¬ ì‚­ì œ í•¨ìˆ˜.
 template<typename T>
 void SafeDelete(T* pointer)
 {
@@ -65,7 +65,7 @@ void SafeDelete(T* pointer)
 	}
 }
 
-// ·Î±× ÇÔ¼ö.
+// ë¡œê·¸ í•¨ìˆ˜.
 template<typename... T>
 void Log(const char* format, T&&... args)
 {
@@ -74,29 +74,29 @@ void Log(const char* format, T&&... args)
 	std::cout << buffer;
 }
 
-// ·£´ı ÇÔ¼ö.
+// ëœë¤ í•¨ìˆ˜.
 inline int Random(int min, int max)
 {
-	// Â÷ÀÌ ±¸ÇÏ±â.
+	// ì°¨ì´ êµ¬í•˜ê¸°.
 	int diff = (max - min) + 1;
 	return ((diff * rand()) / (RAND_MAX + 1)) + min;
 }
 
-// min~max »çÀÌÀÇ ·£´ı °ªÀ» ¹İÈ¯ÇØÁÖ´Â ÇÔ¼ö.
+// min~max ì‚¬ì´ì˜ ëœë¤ ê°’ì„ ë°˜í™˜í•´ì£¼ëŠ” í•¨ìˆ˜.
 inline float RandomPercent(float min, float max)
 {
 	float random = (float)(rand() / (float)RAND_MAX);
 	return random * (max - min) + min;
 }
 
-// ¸Ş¸ğ¸® ´©¼ö È®ÀÎÇÒ ¶§ »ç¿ëÇÏ´Â ÇÔ¼ö.
+// ë©”ëª¨ë¦¬ ëˆ„ìˆ˜ í™•ì¸í•  ë•Œ ì‚¬ìš©í•˜ëŠ” í•¨ìˆ˜.
 inline void CheckMemoryLeak()
 {
 	// https://learn.microsoft.com/ko-kr/cpp/c-runtime-library/find-memory-leaks-using-the-crt-library?view=msvc-170
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 }
 
-// µğ¹ö±ë ¿ëµµ.
+// ë””ë²„ê¹… ìš©ë„.
 #ifdef _DEBUG
 #define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
 // Replace _NORMAL_BLOCK with _CLIENT_BLOCK if you want the
