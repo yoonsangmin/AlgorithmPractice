@@ -52,7 +52,7 @@ public:
                 if (actor->position.x >= boundStart.x && actor->position.x <= boundEnd.x &&
                     actor->position.y >= boundStart.y && actor->position.y <= boundEnd.y)
                 {
-                    if (auto castedActor = std::dynamic_pointer_cast<T>(actor))
+                    if (auto castedActor = std::static_pointer_cast<T>(actor))
                     {
                         outActors.emplace_back(castedActor);
                     }
